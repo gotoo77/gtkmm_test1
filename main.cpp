@@ -1,93 +1,13 @@
-//#include <gtk/gtk.h>
-//#include <gtk/gtklabel.h>
-//#include <glib-2.0/gio/gdbusconnection.h>
-//#include <gtk/gtkwidget.h>
 #include <iostream>
-
-//static gboolean name_seen;
-//static GtkWidget *placeholder;
-//
-//static void
-//on_name_appeared(GDBusConnection *connection,
-//                 const gchar *name,
-//                 const gchar *name_owner,
-//                 gpointer user_data) {
-//    name_seen = TRUE;
-//}
-//
-//static void
-//on_name_vanished(GDBusConnection *connection,
-//                 const gchar *name,
-//                 gpointer user_data) {
-//    if (!name_seen)
-//        return;
-//
-//    if (placeholder) {
-//        gtk_widget_destroy(placeholder);
-//        g_object_unref(placeholder);
-//        placeholder = nullptr;
-//    }
-//}
-//
-//#ifdef G_OS_WIN32
-//#define APP_EXTENSION ".exe"
-//#else
-//#define APP_EXTENSION
-//#endif
-//
-//GtkWidget *
-//do_application_demo(GtkWidget *toplevel) {
-//    static guint watch = 0;
-//
-//    if (watch == 0)
-//        watch = g_bus_watch_name(G_BUS_TYPE_SESSION,
-//                                 "org.gtk.Demo2",
-//                                 static_cast<GBusNameWatcherFlags>(0),
-//                                 on_name_appeared,
-//                                 on_name_vanished,
-//                                 nullptr, nullptr);
-//
-//    if (placeholder == nullptr) {
-//        const gchar *command;
-//        GError *error = nullptr;
-//
-//        if (g_file_test("./gtk3-demo-application" APP_EXTENSION, G_FILE_TEST_IS_EXECUTABLE))
-//            command = "./gtk3-demo-application" APP_EXTENSION;
-//        else
-//            command = "gtk3-demo-application";
-//
-//        if (!g_spawn_command_line_async(command, &error)) {
-//            g_warning ("%s", error->message);
-//            g_error_free(error);
-//        }
-//
-//        placeholder = gtk_label_new("");
-//        g_object_ref_sink(placeholder);
-//    } else {
-//        g_dbus_connection_call_sync(g_bus_get_sync(G_BUS_TYPE_SESSION, nullptr, nullptr),
-//                                    "org.gtk.Demo2",
-//                                    "/org/gtk/Demo2",
-//                                    "org.gtk.Actions",
-//                                    "Activate",
-//                                    g_variant_new("(sava{sv})", "quit", nullptr, nullptr),
-//                                    nullptr,
-//                                    static_cast<GDBusCallFlags>(0),
-//                                    G_MAXINT,
-//                                    nullptr, nullptr);
-//    }
-//
-//    return placeholder;
-//}
-
 #include <gtkmm/main.h>
 #include <gtkmm/window.h>
 #include <gtkmm/hvbox.h>
 #include <gtkmm/entry.h>
 #include <gtkmm/button.h>
-#include "myCustomWindow.h"
+#include "myCustomWindow.hpp"
 
-int main_demo1(int argc, char **argv) {
-    std::cout << "main_demo1" << std::endl;
+int demo1(int argc, char **argv) {
+    std::cout << "demo1" << std::endl;
 
     Gtk::Main app(argc, argv);
     Gtk::Window w;
@@ -114,7 +34,7 @@ int main_demo1(int argc, char **argv) {
     return 0;
 }
 
-int main_CustomWindow(int argc, char **argv) {
+int demo_CustomWindow(int argc, char **argv) {
     Gtk::Main app(argc, argv);
 //    myCustomWindow w;
     std::string img = "/media/sf_VM_linux/tests/gtkmm_test1/assets/img/logocpp64x64.png";
@@ -129,6 +49,14 @@ int main_CustomWindow(int argc, char **argv) {
 
 int main(int argc, char **argv) {
     std::cout << "Hello, gtkmm_test1 " << std::endl;
-//    return main_demo1(argc,argv);
-    return main_CustomWindow(argc, argv);
+    if (argc>=2){
+        if (std::string(argv[0])=="demo1"){
+            return demo1(argc, argv);
+        }
+        else{
+            return demo_CustomWindow(argc, argv);
+        }
+    }
+    return 0;
+
 }
