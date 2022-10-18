@@ -1,7 +1,11 @@
 #ifndef UTILS_LOG_CONSTANTS_HPP
 #define UTILS_LOG_CONSTANTS_HPP
 
+#ifdef _WIN64
+#include <win_ports/syslog.h>
+#else
 #include <syslog.h>
+#endif
 #include <string>
 
 namespace utils {

@@ -8,6 +8,12 @@ set(PROGRAM_VERSION ${PROJECT_VERSION})
 set(PROGRAM_NAME ${PROJECT_NAME})
 configure_file(Version.h.in ${PROJECT_SOURCE_DIR}/external/Version.h)
 
+if (WIN32)
+set(EXTRA_WIN_PORTS_FILES
+        src/win_ports/syslog.c
+#        include/win_ports/syslog.h
+        )
+endif()
 add_executable(${PROJECT_NAME}
         #        base.cpp
         src/main.cpp
@@ -16,6 +22,7 @@ add_executable(${PROJECT_NAME}
         include/utils/AutoClose.hpp
         src/utils/read_val.cpp
         src/utils/MyLog.cpp
+        ${EXTRA_WIN_PORTS_FILES}
         )
 
 if (WIN32)
@@ -103,6 +110,8 @@ if (WIN32)
             C:/msys64/mingw64/bin/libglibmm-2.4-1.dll
             C:/msys64/mingw64/bin/libatkmm-1.6-1.dll
             C:/msys64/mingw64/bin/libsigc-2.0-0.dll
+            # add ws2_32 to solve "undefined reference to `__imp_WSACleanup' etc.."
+            ws2_32
         )
 else()
     target_link_libraries(${PROJECT_NAME}

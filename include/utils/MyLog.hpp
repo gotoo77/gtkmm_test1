@@ -12,7 +12,11 @@
 
 #include <functional>
 #include <utils/log_constants.hpp>
+#ifdef _WIN64
+#include <win_ports/syslog.h>
+#else
 #include <syslog.h>
+#endif
 
 class Log {
     static utils::log_level log_level_;
