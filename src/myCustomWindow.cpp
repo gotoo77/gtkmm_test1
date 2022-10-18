@@ -55,11 +55,13 @@ void myCustomWindow::on_btn_clic(int id, Glib::ustring data) {
 }
 
 myCustomWindow::~myCustomWindow() {
-    cout << "~myCustomWindow " << this->_label_one.get_text() << endl;
+    cout << "~myCustomWindow (delete)" << endl;
 }
 
 
 myCustomWindow::myCustomWindow(const vector<string>& f_btn_list, const string &f_img_file) {
+    cout << "myCustomWindow instanciate " << endl;
+
     set_title("myCustomWindow(" + to_string(f_btn_list.size()) + ", " + f_img_file + ")");
 
     if (check_file_exist(f_img_file)) {

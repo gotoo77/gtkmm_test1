@@ -1,13 +1,21 @@
 cmake_minimum_required(VERSION 3.20)
-project(gtkmm_test1)
+project(gtkmm_test VERSION 0.1.0)
 
 set(CMAKE_CXX_STANDARD 14)
 
+#------------------------ Program version --------------------------------#
+set(PROGRAM_VERSION ${PROJECT_VERSION})
+set(PROGRAM_NAME ${PROJECT_NAME})
+configure_file(Version.h.in ${PROJECT_SOURCE_DIR}/external/Version.h)
+
 add_executable(${PROJECT_NAME}
-#        base.cpp
-        main.cpp
-        myCustomWindow.cpp
-        myCustomWindow.hpp
+        #        base.cpp
+        src/main.cpp
+        src/myCustomWindow.cpp
+        include/myCustomWindow.hpp
+        include/utils/AutoClose.hpp
+        src/utils/read_val.cpp
+        src/utils/MyLog.cpp
         )
 
 if (WIN32)
@@ -79,6 +87,12 @@ else()
         /usr/lib64/giomm-2.4/include
         )
 endif()
+
+target_include_directories(${PROJECT_NAME}
+        PRIVATE
+        ${PROJECT_SOURCE_DIR}
+        ${PROJECT_SOURCE_DIR}/include
+        )
 
 if (WIN32)
     target_link_libraries(${PROJECT_NAME}
