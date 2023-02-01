@@ -11,9 +11,9 @@
 #include <cinttypes> //for PRIu64
 
 #include <functional>
-#include <utils/log_constants.hpp>
+#include "include/utils/log_constants.hpp"
 #ifdef _WIN64
-#include <win_ports/syslog.h>
+#include "include/win_ports/syslog.h"
 #else
 #include <syslog.h>
 #endif

@@ -5,12 +5,12 @@
 #include <gtkmm/entry.h>
 #include <gtkmm/button.h>
 #include <Global.h>
-#include "myCustomWindow.hpp"
+#include "include/gtkmm/myCustomWindow.hpp"
 
 #include "external/Version.h"
-#include "utils/MyLog.hpp"
+#include "include/utils/log/MyLog.hpp"
 #include <utils/AutoClose.hpp>
-#include <utils/read_val.hpp>
+#include "include/utils/config/read_val.hpp"
 #include <fstream>
 #include "Global.h"
 
@@ -71,9 +71,9 @@ int demo_gtkapp() {
     button->show();
     my_box1.show();
 
+    //    main_window.add(*button);
+    //    main_window.show_all(); //for some widgets (I don't remember which) show() is not enough
 
-//    main_window.add(*button);
-//    main_window.show_all(); //for some widgets (I don't remember which) show() is not enough
     return app->run(main_window);
 }
 

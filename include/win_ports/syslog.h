@@ -29,8 +29,8 @@
  *	@(#)syslog.h	8.1 (Berkeley) 6/2/93
  */
 
-#ifndef _SYS_SYSLOG_H
-#define _SYS_SYSLOG_H 1
+#ifndef SYS_SYSLOG_H
+#define SYS_SYSLOG_H 1
 
 #include <stdarg.h>
 /*
@@ -209,4 +209,4 @@ extern void exit_syslog(void);
 }
 #endif
 
-#endif /* syslog.h */
+#endif // SYS_SYSLOG_H

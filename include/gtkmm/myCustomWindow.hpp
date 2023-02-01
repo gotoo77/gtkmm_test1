@@ -24,11 +24,12 @@ private:
     }
 
 protected:
-    Gtk::VBox _vbox_one;            // un vertical box dans laquelle entrer les elements (widgets)
-    Gtk::Label _label_one;          // un label (zone de texte)
-    Gtk::Entry _entry_one;          // une saisie (edit)
-    Gtk::Button _button_one;        // un bouton
-    std::vector<Gtk::Button> _buttons;// une liste de boutons
+    Gtk::VBox                   _vbox_one;            // un vertical box dans laquelle entrer les elements (widgets)
+    Gtk::Label                  _label_one;          // un label (zone de texte)
+    Gtk::Entry                  _entry_one;          // une saisie (edit)
+    Gtk::Button                 _button_one;        // un bouton
+    Gtk::ArrowType                 _arrow;        //
+    std::vector<Gtk::Button>    _buttons;           // une liste de boutons
 
     void on_btn_clicked1();
 
@@ -38,7 +39,7 @@ protected:
      * @param id
      * @param data
      */
-    void on_btn_clic(int id, Glib::ustring data);
+    void on_btn_clic(int id, const Glib::ustring& data);
 
 public:
     myCustomWindow();

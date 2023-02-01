@@ -2,7 +2,7 @@
 // Created by gduval on 15/04/2022.
 //
 #include <iostream>
-#include "myCustomWindow.hpp"
+#include "include/gtkmm/myCustomWindow.hpp"
 
 using namespace std;
 
@@ -47,7 +47,7 @@ void myCustomWindow::on_btn_clicked2() {
     _label_one.set_text(__FUNCTION__ + _entry_one.get_text() + ".");
 }
 
-void myCustomWindow::on_btn_clic(int id, Glib::ustring data) {
+void myCustomWindow::on_btn_clic(int id, const Glib::ustring& data) {
     string s = __FUNCTION__;
     s += " > data=[" + data + "] " + _entry_one.get_text() + to_string(id);
     cout << s << endl;

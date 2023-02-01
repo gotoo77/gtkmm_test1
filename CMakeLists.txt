@@ -12,16 +12,32 @@ if (WIN32)
 set(EXTRA_WIN_PORTS_FILES
         src/win_ports/syslog.c
 #        include/win_ports/syslog.h
+        src/utils/strings/string_gen.cpp
         )
 endif()
+
+add_executable(test_syslog
+        src/main_syslog.cpp
+        src/win_ports/syslog.c
+        src/utils/strings/string_gen.cpp
+        )
+target_include_directories(test_syslog PRIVATE
+        ${PROJECT_SOURCE_DIR}
+        ${PROJECT_SOURCE_DIR}/include
+        )
+target_link_libraries(test_syslog
+        # add ws2_32 to solve "undefined reference to `__imp_WSACleanup' etc.."
+        ws2_32
+        )
+
 add_executable(${PROJECT_NAME}
-        #        base.cpp
-        src/main.cpp
-        src/myCustomWindow.cpp
-        include/myCustomWindow.hpp
+#        src/main_gtk_simple.cpp
+        src/main_gtkmm.cpp
+        src/gtkmm/myCustomWindow.cpp
+        include/gtkmm/myCustomWindow.hpp
         include/utils/AutoClose.hpp
-        src/utils/read_val.cpp
-        src/utils/MyLog.cpp
+        src/utils/config/read_val.cpp
+        src/utils/log/MyLog.cpp
         ${EXTRA_WIN_PORTS_FILES}
         )
 
