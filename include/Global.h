@@ -13,10 +13,10 @@ typedef struct ConfigSyslog {
 } rConfigSyslog;
 
 struct Globals {
-    rConfigSyslog cfg_syslog;
-    bool verbose;            /*!< extra verbose log */
-    char Server1[USER_LEN]; /*!< hostname/IP du serveur -tentative 1- pour connexion a la BDD (SQL) */
-    bool test_flag;     /*!<   */
+    rConfigSyslog cfg_syslog;    /*!< structure de config syslog */
+    bool verbose{};              /*!< extra verbose log */
+    char Server1[USER_LEN]{};    /*!< hostname/IP du serveur -tentative 1- pour connexion a la BDD (SQL) */
+    bool test_flag{};            /*!<   */
 
 };
 

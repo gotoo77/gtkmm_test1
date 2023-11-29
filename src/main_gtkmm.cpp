@@ -5,7 +5,7 @@
 #include <gtkmm/entry.h>
 #include <gtkmm/button.h>
 #include <Global.h>
-#include "include/gtkmm/myCustomWindow.hpp"
+#include "include/gtkmm/My_CW_main.hpp"
 
 #include "external/Version.h"
 #include "include/utils/log/MyLog.hpp"
@@ -13,8 +13,25 @@
 #include "include/utils/config/read_val.hpp"
 #include <fstream>
 #include "Global.h"
+#include "utils/dirpath.hpp"
+#include "string_gen.hpp"
+#include "myAppInfo.hpp"
+#include "cond_print.hpp"
+#include "const_shared.hpp"
+#include <unistd.h>
+
+#ifdef _WIN32
+
+#include <win_ports/syslog.h>
+
+#else
+#include <syslog.h>
+#endif
 
 Globals G; // NOLINT : oui on est des fous on utilise des variables globales :)
+bool read_conf(const std::string &f_conf_path);
+
+void open_trace();
 
 int demo1(int argc, char **argv) {
     std::cout << "demo1" << std::endl;
@@ -80,13 +97,36 @@ int demo_gtkapp() {
 int demo_CustomWindow(int argc, char **argv) {
     Gtk::Main app(argc, argv);
 
-    std::string img = "/media/sf_VM_linux/tests/gtkmm_test1/assets/img/logocpp64x64.png";
-    std::vector<std::string> btn_list = {"1", "trotro", "2", "yolo", "pouet",
+
+    std::string exeDir = get_exe_dirpath();
+    std::cout << "exeDir : " << exeDir << std::endl;
+    //std::string img = "/media/sf_VM_linux/tests/gtkmm_test1/assets/img/logocpp64x64.png";
+    std::string img = exeDir + ".." + dir_sep + "assets" + dir_sep + "img" + dir_sep + "logocpp64x64.png";
+
+    std::vector<std::string> btn_list = {CONST_SHARED::BTN1, CONST_SHARED::BTN2,
+                                         "trotro", "yolo", "pouet",
                                          "gros bouton badass", "3", "tata monique"};
 
-    myCustomWindow w(btn_list, img);
-    Gtk::Main::run(w);
+    My_CW_main main_w(btn_list, img);
+    Gtk::Main::run(main_w);
     return 0;
+}
+
+void open_trace() {
+    myAppInfo prog(PROGRAM_NAME, PROGRAM_VERSION);
+#ifdef _WIN32
+    init_syslog("localhost");
+#endif
+    // Ouverture de la trace
+    std::string progId = prog.getFullName();
+    utils::AutoClose autoClose;
+    autoClose.acquire(&Log::init, Log::Init{
+            .program = progId.c_str(),
+            .level = G.cfg_syslog.level,
+            .facility = G.cfg_syslog.facility,
+            .console = G.cfg_syslog.console
+    });
+    LOG_N("Starting %s", progId.c_str());
 }
 
 bool read_conf(const std::string &f_conf_path) {
@@ -126,8 +166,6 @@ bool read_conf(const std::string &f_conf_path) {
             } else if (key == "LogFacility") {
                 if (value == "LOCAL0")
                     G.cfg_syslog.facility = utils::syslog_facility::local_0;
-                else if (value == "LOCAL1")
-                    G.cfg_syslog.facility = utils::syslog_facility::local_1;
                 else if (value == "LOCAL2")
                     G.cfg_syslog.facility = utils::syslog_facility::local_2;
                 else if (value == "LOCAL3")
@@ -139,7 +177,7 @@ bool read_conf(const std::string &f_conf_path) {
                 else if (value == "LOCAL7")
                     G.cfg_syslog.facility = utils::syslog_facility::local_7;
                 else
-                    G.cfg_syslog.facility = utils::syslog_facility::local_1;;
+                    G.cfg_syslog.facility = utils::syslog_facility::local_1;
             } else if (key == "console") {
                 if (value == "1" || value == "true")
                     G.cfg_syslog.console = true;
@@ -154,51 +192,49 @@ bool read_conf(const std::string &f_conf_path) {
     return true;
 }
 
-void open_trace() {
-    // Ouverture de la trace
-    std::string progId = PROGRAM_NAME "-" PROGRAM_VERSION;
-    utils::AutoClose autoClose;
-    autoClose.acquire(&Log::init, Log::Init{
-            .program = progId.c_str(),
-            .level = G.cfg_syslog.level,
-            .facility = G.cfg_syslog.facility,
-            .console = G.cfg_syslog.console
-    });
-    LOG_N("Starting %s", progId.c_str());
-}
-
 int main(int argc, char **argv) {
+
+    open_trace();
     std::ostringstream log;
     log << " *** Welcome to " << PROGRAM_NAME << " v" << PROGRAM_VERSION << " ***";
+    LOG_D("%s", log.str().c_str());
 
     // read conf and set log options
-    auto conf_read = read_conf("/media/sf_VM_linux/tests/gtkmm_test1/conf/gtkmm.conf");
+    auto exeDir = get_exe_dirpath();
+    std::string conf_path = exeDir + ".." + dir_sep + "conf" + dir_sep + "gtkmm.ini";
+    std::cout << "conf_path : " << conf_path << std::endl;
+    auto conf_read = read_conf(conf_path);
     if (!conf_read) {
         std::cerr << "conf has not been read " << std::endl;
     }
 
-    open_trace();
-    LOG_D("%s", log.str().c_str());
-
     if (argc >= 2) {
         auto arg1 = std::string(argv[1]);
         if (arg1 == "demo1") {
-            log.str();
+            log.str("");
+            log.clear(); // Clear log contents
             log << "running demo1() entry point";
             LOG_D("%s", log.str().c_str());
             return demo1(argc, argv);
         } else {
-            log.str();
+            log.str("");
+            log.clear(); // Clear log contents
             log << "running demo_CustomWindow() entry point";
             LOG_D("%s", log.str().c_str());
             return demo_CustomWindow(argc, argv);
         }
     } else {
-        log.str();
+        log.str("");
+        log.clear(); // Clear log contents
         log << "running demo_gtkapp() entry point";
         LOG_D("%s", log.str().c_str());
         demo_gtkapp();
     }
 
+    log.str("");
+    log.clear(); // Clear log contents
+    log << "closing log - exiting program";
+    LOG_N("%s", log.str().c_str());
+    closelog();
     return 0;
 }

@@ -11,16 +11,28 @@ configure_file(Version.h.in ${PROJECT_SOURCE_DIR}/external/Version.h)
 if (WIN32)
 set(EXTRA_WIN_PORTS_FILES
         src/win_ports/syslog.c
-#        include/win_ports/syslog.h
-        src/utils/strings/string_gen.cpp
-        )
+        include/win_ports/syslog.h
+)
 endif()
+
+# CURL lib & include
+
+if (WIN32)
+set(CURL_INC C:/msys64/mingw64/include)
+set(CURL_LIB C:/msys64/mingw64/lib)
+else ()
+set(CURL_INC /usr/include)
+set(CURL_LIB /usr/lib)
+endif ()
 
 add_executable(test_syslog
         src/main_syslog.cpp
         src/win_ports/syslog.c
         src/utils/strings/string_gen.cpp
-        )
+        include/myAppInfo.hpp
+        include/cond_print.hpp
+        include/utils/dirpath.hpp
+)
 target_include_directories(test_syslog PRIVATE
         ${PROJECT_SOURCE_DIR}
         ${PROJECT_SOURCE_DIR}/include
@@ -33,13 +45,18 @@ target_link_libraries(test_syslog
 add_executable(${PROJECT_NAME}
 #        src/main_gtk_simple.cpp
         src/main_gtkmm.cpp
-        src/gtkmm/myCustomWindow.cpp
-        include/gtkmm/myCustomWindow.hpp
+        src/gtkmm/My_CW_main.cpp
+        src/gtkmm/My_CW_pouet.cpp
+        src/gtkmm/My_CW_Form1.cpp
+        include/gtkmm/My_CW_main.hpp
+        include/gtkmm/My_CW_pouet.hpp
+        include/gtkmm/My_CW_Form1.hpp
         include/utils/AutoClose.hpp
         src/utils/config/read_val.cpp
         src/utils/log/MyLog.cpp
         ${EXTRA_WIN_PORTS_FILES}
-        )
+        include/const_shared.hpp
+)
 
 if (WIN32)
 else()
@@ -115,7 +132,8 @@ target_include_directories(${PROJECT_NAME}
         PRIVATE
         ${PROJECT_SOURCE_DIR}
         ${PROJECT_SOURCE_DIR}/include
-        )
+        ${CURL_INC}
+)
 
 if (WIN32)
     target_link_libraries(${PROJECT_NAME}
@@ -128,7 +146,9 @@ if (WIN32)
             C:/msys64/mingw64/bin/libsigc-2.0-0.dll
             # add ws2_32 to solve "undefined reference to `__imp_WSACleanup' etc.."
             ws2_32
-        )
+            # lib _pCurl
+            C:/msys64/mingw64/lib/libcurl.dll.a
+    )
 else()
     target_link_libraries(${PROJECT_NAME}
         /usr/lib64/libgtkmm-3.0.so
@@ -139,5 +159,6 @@ else()
         /usr/lib64/libglibmm-2.4.so
         /usr/lib64/libatkmm-1.6.so
         /usr/lib64/libsigc-2.0.so
-        )
+        ${CURL_LIB}/libcurl.so
+    )
 endif()

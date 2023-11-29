@@ -67,3 +67,29 @@ $ pkg-config glibmm-2.4 --libs
 * crash at runtime for now
 ```Process finished with exit code -1073741515 (0xC0000135)```. 
  Apparently, ``0xc0000135`` is the STATUS_DLL_NOT_FOUND
+
+--> Edit environment variable and add the directory for GTK & GTKmm dll used by the project
+(for instance : "C:/msys64/mingw64/bin/")
+
+Also did in MSYS2 app (MinGW)
+```
+pacman -Syuu
+[repeat "pacman -Syuu" multiple times until environment stabilizes]
+pacman -S --needed base-devel mingw-w64-i686-toolchain mingw-w64-x86_64-toolchain git subversion mercurial mingw-w64-i686-cmake mingw-w64-x86_64-cmake
+pacman -S base-devel mingw-w64-toolchain mingw-w64-i686-gtk2
+pacman -S mingw-w64-i686-gtk2
+pacman -S mingw-w64-x86_64-gtk2
+pacman -S mingw-w64-i686-gtk3
+pacman -S mingw-w64-x86_64-gtk3 
+```
+like here https://github.com/gtkwave/gtkwave/tree/master
+
+
+#### CURL (MSYS2)
+```
+pacman -S mingw-w64-x86_64-_pCurl
+```
+then check with 
+```shell
+ _pCurl --version
+```
