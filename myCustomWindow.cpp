@@ -2,6 +2,7 @@
 // Created by gduval on 15/04/2022.
 //
 #include <iostream>
+#include <sys/stat.h>
 #include "myCustomWindow.h"
 
 using namespace std;
